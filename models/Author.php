@@ -58,7 +58,7 @@ class Author
     {
         // Create query
         $query = "INSERT INTO " . $this->table . " (author)
-        VALUES (?)";
+        VALUES (?) RETURNING id";
 
         // Prepare statement
         $stmt = $this->conn->prepare($query);

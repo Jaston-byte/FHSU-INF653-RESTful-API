@@ -58,7 +58,7 @@ class Category
     {
         // Create query
         $query = "INSERT INTO " . $this->table . " (category)
-        VALUES (?)";
+        VALUES (?) RETURNING id";
 
         // Prepare statement
         $stmt = $this->conn->prepare($query);

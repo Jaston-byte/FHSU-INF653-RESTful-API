@@ -17,21 +17,21 @@ if (!empty($quote->id)) {
     // Get quote
     $quote->read_single();
 
-    // Create array
-    $quote_arr = array(
-        'id' => $quote->id,
-        'quote' => $quote->quote,
-        'author_id' => $quote->author_id,
-        'category_id' => $quote->category_id
-    );
+    if (!empty($quote->quote)) {
+        // Create array
+        $quote_arr = array(
+            'id' => $quote->id,
+            'quote' => $quote->quote,
+            'author' => $quote->author_id,
+            'category' => $quote->category_id
+        );
 
-    if (!empty($quote_arr) && $quote_arr['quote'] !== null) {
         // Make JSON
-        print_r(json_encode($quote_arr));
+        echo json_encode($quote_arr);
     } else {
-        // No categories
+        // No quote found
         echo json_encode(
-            array('message' => 'quote_id Not Found')
+            array('message' => 'No Quotes Found')
         );
     }
 } else {
@@ -40,4 +40,5 @@ if (!empty($quote->id)) {
         array('message' => 'quote_id Not Found')
     );
 }
+
 ?>
