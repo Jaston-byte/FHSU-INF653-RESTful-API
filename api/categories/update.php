@@ -31,7 +31,7 @@ if (!$data || !isset($data->category) || !isset($data->id)) {
         );
     } else {
         echo json_encode(
-            array('message' => 'category_id not found')
+            array('message' => 'category_id Not found')
         );
     }
 }

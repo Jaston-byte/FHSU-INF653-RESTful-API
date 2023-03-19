@@ -31,7 +31,7 @@ if (!$data || !isset($data->author) || !isset($data->id)) {
         );
     } else {
         echo json_encode(
-            array('message' => 'author_id not found')
+            array('message' => 'author_id Not found')
         );
     }
 }
