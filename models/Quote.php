@@ -40,11 +40,11 @@ class Quote
     {
         // Create query
         $query = 'SELECT q.id, q.quote, a.author as author_name,
-        c.category as category_name 
-          FROM quotes q 
-          LEFT JOIN authors a ON q.author_id = a.id 
-          LEFT JOIN categories c ON q.category_id = c.id
-          WHERE q.id = ?';
+    c.category as category_name 
+      FROM quotes q 
+      LEFT JOIN authors a ON q.author_id = a.id 
+      LEFT JOIN categories c ON q.category_id = c.id
+      WHERE q.id = ?';
 
         // Prepare statement
         $stmt = $this->conn->prepare($query);
@@ -65,46 +65,38 @@ class Quote
             $this->category_id = $row['category_name'];
         }
     }
-
     public function create()
     {
-        $query = "INSERT INTO " .
-            $this->table . "(quote, author_id, category_id)
-			VALUES(
-				 ?, ?, ?)";
+        // query
+        $query = 'INSERT INTO ' . $this->table . ' (quote, author_id, category_id)
+            VALUES (:quote, :author_id, :category_id) RETURNING id';
+
         // Prepare statement
         $stmt = $this->conn->prepare($query);
+
         // Clean data
         $this->quote = htmlspecialchars(strip_tags($this->quote));
         $this->author_id = htmlspecialchars(strip_tags($this->author_id));
         $this->category_id = htmlspecialchars(strip_tags($this->category_id));
-        // Bind params
-        $stmt->bindParam(1, $this->quote);
-        $stmt->bindParam(2, $this->author_id);
-        $stmt->bindParam(3, $this->category_id);
-        // Exec statement
+
+        // Bind data
+        $stmt->bindParam(':quote', $this->quote);
+        $stmt->bindParam(':author_id', $this->author_id);
+        $stmt->bindParam(':category_id', $this->category_id);
+
+        // Execute query
         if ($stmt->execute()) {
+            // Get ID of the newly created quote
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->id = $row['id'];
             return true;
         }
 
+        // Print error if something goes wrong
         printf("Error: %s.\n", $stmt->error);
+
         return false;
-
-        if ($categories->category != null) {
-            $category_arr = array(
-                'id' => $categories->id,
-                'category' => $categories->category
-            );
-
-            echo json_encode($category_arr);
-        } else {
-            echo json_encode(
-                array('message' => 'category_id Not Found')
-            );
-        }
     }
-
-    // Update quote
     public function update()
     {
         // query
